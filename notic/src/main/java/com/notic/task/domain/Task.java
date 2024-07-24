@@ -8,7 +8,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-@Entity(name = "TASKS")
+@Entity
+@Table(name = "TASKS")
 @Builder @NoArgsConstructor @AllArgsConstructor
 @Getter @Setter
 @EqualsAndHashCode

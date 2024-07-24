@@ -7,7 +7,8 @@ import lombok.*;
 
 import java.util.Set;
 
-@Entity(name = "USERS")
+@Entity
+@Table(name = "USERS")
 @Builder @NoArgsConstructor @AllArgsConstructor
 @Getter @Setter
 @EqualsAndHashCode(exclude = {"accessTokens", "taskGroups"})

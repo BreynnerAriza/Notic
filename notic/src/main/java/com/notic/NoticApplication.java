@@ -1,7 +1,16 @@
 package com.notic;
 
+import com.notic.token.constants.TokenType;
+import com.notic.token.domain.AccessToken;
+import com.notic.token.repositories.AccessTokenRepository;
+import com.notic.user.domain.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+
+import java.util.List;
 
 @SpringBootApplication
 public class NoticApplication {

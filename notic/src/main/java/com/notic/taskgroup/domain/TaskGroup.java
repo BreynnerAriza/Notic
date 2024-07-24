@@ -7,7 +7,8 @@ import lombok.*;
 
 import java.util.Set;
 
-@Entity(name = "TASKS_GROUPS")
+@Entity
+@Table(name = "TASKS_GROUPS")
 @Builder @NoArgsConstructor @AllArgsConstructor
 @Getter @Setter
 @EqualsAndHashCode

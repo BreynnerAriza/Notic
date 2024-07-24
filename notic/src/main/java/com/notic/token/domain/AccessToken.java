@@ -5,7 +5,8 @@ import com.notic.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity(name = "ACCESS_TOKEN")
+@Entity
+@Table(name = "ACCESS_TOKENS")
 @Builder @NoArgsConstructor @AllArgsConstructor
 @Getter @Setter
 @EqualsAndHashCode
