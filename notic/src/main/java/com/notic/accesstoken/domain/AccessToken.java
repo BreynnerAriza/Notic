@@ -1,6 +1,6 @@
-package com.notic.token.domain;
+package com.notic.accesstoken.domain;
 
-import com.notic.token.constants.TokenType;
+import com.notic.accesstoken.constants.TokenType;
 import com.notic.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;

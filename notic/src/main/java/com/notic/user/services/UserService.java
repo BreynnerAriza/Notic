@@ -6,7 +6,7 @@ import com.notic.user.domain.User;
 
 public interface UserService {
 
-    UserRegisteredDTO saveUser(UserRegisterDTO userRegisterDTO);
+    UserRegisteredDTO saveUser(UserRegisterDTO userRegisterDTO, String passwordEncrypted);
     User findUserByEmail(String email);
 
 }

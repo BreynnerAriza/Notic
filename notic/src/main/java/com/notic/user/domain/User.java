@@ -1,7 +1,7 @@
 package com.notic.user.domain;
 
 import com.notic.taskgroup.domain.TaskGroup;
-import com.notic.token.domain.AccessToken;
+import com.notic.accesstoken.domain.AccessToken;
 import jakarta.persistence.*;
 import lombok.*;
 
