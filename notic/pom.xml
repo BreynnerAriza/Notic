@@ -71,12 +71,12 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- SPRING SECURITY
+        <!-- SPRING SECURITY -->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
-        </dependency>-->
+        </dependency>
         <!-- MAPSTRUCT -->
         <dependency>
             <groupId>org.mapstruct</groupId>
