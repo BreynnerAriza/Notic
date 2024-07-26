@@ -1,4 +1,8 @@
 package com.notic.auth.authentication.dtos.request;
 
-public record AuthenticationCredentialsDTO() {
-}
+import java.io.Serializable;
+
+public record AuthenticationCredentialsDTO(
+        String email,
+        String password
+) implements Serializable { }
