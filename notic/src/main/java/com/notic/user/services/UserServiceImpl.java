@@ -18,16 +18,15 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional
-    public UserRegisteredDTO saveUser(UserRegisterDTO userRegisterDTO, String passwordEncrypted) {
+    public User saveUser(UserRegisterDTO userRegisterDTO, String passwordEncrypted) {
         //Check that the email is not already registered
         if(findUserByEmail(userRegisterDTO.email()) != null){
             // Throw exception email registered
         }
         final User user =  userMapper.userRegisterToUser(userRegisterDTO);
         user.setPassword(passwordEncrypted);
-        final User userRegistered = userRepository.save(user);
 
-        return userMapper.userToUserRegistered(userRegistered);
+        return userRepository.save(user);
     }
 
     @Override
