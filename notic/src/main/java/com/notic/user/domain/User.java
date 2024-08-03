@@ -25,7 +25,7 @@ public class User implements UserDetails {
     private String password;
     private String names;
     private String surnames;
-    private Boolean active = Boolean.TRUE;
+    private Boolean active;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private Set<AccessToken> accessTokens;

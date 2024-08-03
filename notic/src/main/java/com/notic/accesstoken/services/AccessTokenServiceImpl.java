@@ -10,9 +10,9 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
-public class AccessTokenServiceImpl implements AccessTokenService{
+public class AccessTokenServiceImpl implements IAccessTokenService {
 
-    private AccessTokenRepository accessTokenRepository;
+    private final AccessTokenRepository accessTokenRepository;
 
     @Override
     @Transactional

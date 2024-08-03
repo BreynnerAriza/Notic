@@ -4,7 +4,7 @@ import com.notic.accesstoken.domain.AccessToken;
 
 import java.util.Set;
 
-public interface AccessTokenService {
+public interface IAccessTokenService {
 
     void saveToken(AccessToken accessToken);
     Set<AccessToken> getAllTokenValidByUser(Integer userId);

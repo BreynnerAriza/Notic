@@ -1,7 +1,7 @@
 package com.notic.user.services;
 
 import com.notic.auth.authentication.dtos.request.UserRegisterDTO;
-import com.notic.auth.authentication.dtos.response.UserRegisteredDTO;
+import com.notic.common.exceptions.customexceptions.AlreadyExists;
 import com.notic.user.domain.User;
 import com.notic.user.mappers.UserMapper;
 import com.notic.user.repositories.UserRepository;
@@ -9,9 +9,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.notic.auth.authentication.exceptions.constants.AuthenticationExceptionConstants.EMAIL_ALREADY_EXISTS;
+
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements IUserService {
 
     private final UserMapper userMapper;
     private final UserRepository userRepository;
@@ -19,12 +21,18 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public User saveUser(UserRegisterDTO userRegisterDTO, String passwordEncrypted) {
-        //Check that the email is not already registered
         if(findUserByEmail(userRegisterDTO.email()) != null){
-            // Throw exception email registered
+            throw new AlreadyExists(
+                    EMAIL_ALREADY_EXISTS.getTitle(),
+                    EMAIL_ALREADY_EXISTS.getMessage(),
+                    EMAIL_ALREADY_EXISTS.getStatus()
+            );
         }
+        System.out.println("userRegisterDTO = " + userRegisterDTO);
         final User user =  userMapper.userRegisterToUser(userRegisterDTO);
+        user.setActive(Boolean.TRUE);
         user.setPassword(passwordEncrypted);
+        System.out.println("user = " + user);
 
         return userRepository.save(user);
     }

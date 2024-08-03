@@ -8,11 +8,15 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
@@ -22,12 +26,30 @@ public class SecurityConfig {
     private final UserRepository userRepository;
 
     @Bean
-    AuthenticationManager getAuthenticationManager(AuthenticationConfiguration config) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        return httpSecurity
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(
+                        auth -> {
+                            // Authentication end point
+                            auth.requestMatchers("/api/v1/auth/**").permitAll();
+                        }
+                )
+                .sessionManagement(
+                        session -> {
+                            session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                        }
+                )
+                .build();
+    }
+
+    @Bean
+    public AuthenticationManager getAuthenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
     @Bean
-    AuthenticationProvider getAuthenticationProvider(){
+    public AuthenticationProvider getAuthenticationProvider(){
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setUserDetailsService(getUserDetailsService());
         daoAuthenticationProvider.setPasswordEncoder(getPasswordEncoder());
@@ -35,13 +57,13 @@ public class SecurityConfig {
     }
 
     @Bean
-    UserDetailsService getUserDetailsService(){
+    public UserDetailsService getUserDetailsService(){
         return email -> userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Credentials invalid"));
     }
 
     @Bean
-    PasswordEncoder getPasswordEncoder(){
+    public PasswordEncoder getPasswordEncoder(){
         return new BCryptPasswordEncoder();
     }
 
