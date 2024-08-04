@@ -8,15 +8,21 @@ import com.notic.auth.dtos.request.AuthenticationCredentialsDTO;
 import com.notic.auth.dtos.request.RefreshTokenDTO;
 import com.notic.auth.dtos.request.UserRegisterDTO;
 import com.notic.auth.dtos.response.AuthenticationSuccessDTO;
+import com.notic.auth.dtos.response.LogoutSuccessDTO;
 import com.notic.common.exceptions.customexceptions.TokenInvalidException;
 import com.notic.common.security.services.JwtService;
 import com.notic.user.domain.User;
 import com.notic.user.services.IUserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.net.http.HttpRequest;
+
 import static com.notic.common.exceptions.constants.ExceptionConstants.*;
 
 @Service
@@ -73,6 +79,20 @@ public class AuthenticationServiceImpl implements IAuthenticationService{
 
         return new AuthenticationSuccessDTO(newToken, token.refreshToken());
     }
+
+    @Override
+    public LogoutSuccessDTO logout(HttpServletRequest httpRequest) {
+
+        String bearerToken = httpRequest.getHeader(HttpHeaders.AUTHORIZATION);
+        String token = bearerToken.substring(7);
+        AccessToken accessToken = accessTokenService.getAccessTokenByToken(token);
+        accessToken.setExpired(Boolean.TRUE);
+        accessToken.setRevoked(Boolean.TRUE);
+        accessTokenService.saveToken(accessToken);
+
+        return new LogoutSuccessDTO("Logout successful");
+    }
+
 
     private void saveTokenUser(User user, String token){
         final AccessToken accessToken = AccessToken.builder()

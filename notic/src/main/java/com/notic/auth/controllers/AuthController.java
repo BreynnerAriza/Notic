@@ -4,8 +4,10 @@ import com.notic.auth.dtos.request.AuthenticationCredentialsDTO;
 import com.notic.auth.dtos.request.RefreshTokenDTO;
 import com.notic.auth.dtos.request.UserRegisterDTO;
 import com.notic.auth.dtos.response.AuthenticationSuccessDTO;
+import com.notic.auth.dtos.response.LogoutSuccessDTO;
 import com.notic.auth.services.IAuthenticationService;
 import com.notic.common.dtos.responses.SuccessResponseDTO;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,5 +53,12 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<SuccessResponseDTO<LogoutSuccessDTO>> logout(HttpServletRequest request){
+        LogoutSuccessDTO logoutSuccess = authenticationService.logout(request);
+        SuccessResponseDTO<LogoutSuccessDTO> response =
+                new SuccessResponseDTO<>(HttpStatus.OK.value(), logoutSuccess);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 
 }
