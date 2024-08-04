@@ -1,13 +1,14 @@
-package com.notic.auth.authentication.services;
+package com.notic.auth.services;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.notic.accesstoken.constants.TokenType;
 import com.notic.accesstoken.domain.AccessToken;
 import com.notic.accesstoken.services.IAccessTokenService;
-import com.notic.auth.authentication.dtos.request.AuthenticationCredentialsDTO;
-import com.notic.auth.authentication.dtos.request.UserRegisterDTO;
-import com.notic.auth.authentication.dtos.response.AuthenticationSuccessDTO;
-import static com.notic.auth.authentication.exceptions.constants.AuthenticationExceptionConstants.*;
-import com.notic.common.exceptions.customexceptions.AlreadyExists;
+import com.notic.auth.dtos.request.AuthenticationCredentialsDTO;
+import com.notic.auth.dtos.request.RefreshTokenDTO;
+import com.notic.auth.dtos.request.UserRegisterDTO;
+import com.notic.auth.dtos.response.AuthenticationSuccessDTO;
+import com.notic.common.exceptions.customexceptions.TokenInvalidException;
 import com.notic.common.security.services.JwtService;
 import com.notic.user.domain.User;
 import com.notic.user.services.IUserService;
@@ -16,7 +17,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import static com.notic.common.exceptions.constants.ExceptionConstants.*;
 
 @Service
 @RequiredArgsConstructor
@@ -54,6 +55,23 @@ public class AuthenticationServiceImpl implements IAuthenticationService{
         saveTokenUser(user, token); //Save token
 
         return new AuthenticationSuccessDTO(token, refreshToken);
+    }
+
+    @Override
+    public AuthenticationSuccessDTO refreshToken(RefreshTokenDTO token) {
+
+        if(accessTokenService.getAccessTokenByToken(token.refreshToken()) != null){
+            throw new TokenInvalidException(
+                    TOKEN_INVALID.getTitle(), TOKEN_INVALID.getMessage(), TOKEN_INVALID.getStatus()
+            );
+        }
+
+        DecodedJWT decodedJWT = jwtService.decodeToken(token.refreshToken());
+        User user = userService.findUserByEmail(decodedJWT.getSubject());
+        String newToken = jwtService.getToken(user);
+        saveTokenUser(user, newToken);
+
+        return new AuthenticationSuccessDTO(newToken, token.refreshToken());
     }
 
     private void saveTokenUser(User user, String token){

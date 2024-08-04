@@ -1,4 +1,4 @@
-package com.notic.auth.authentication.exceptions.constants;
+package com.notic.auth.constants;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

@@ -1,8 +1,7 @@
 package com.notic.user.mappers;
 
-import ch.qos.logback.core.model.ModelConstants;
-import com.notic.auth.authentication.dtos.request.UserRegisterDTO;
-import com.notic.auth.authentication.dtos.response.UserRegisteredDTO;
+import com.notic.auth.dtos.request.UserRegisterDTO;
+import com.notic.auth.dtos.response.UserRegisteredDTO;
 import com.notic.user.domain.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;

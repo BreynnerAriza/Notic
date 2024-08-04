@@ -6,6 +6,7 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 import com.notic.accesstoken.domain.AccessToken;
+import com.notic.common.exceptions.customexceptions.TokenInvalidException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.UUID;
+
+import static com.notic.common.exceptions.constants.ExceptionConstants.TOKEN_INVALID;
 
 @Service
 public class JwtService {
@@ -54,10 +57,11 @@ public class JwtService {
                     .withIssuer(userGenerator)
                     .build();
             return jwtVerifier.verify(token);
-        }catch(TokenExpiredException tokenExpiredException){
-            System.out.println("The token is expired");
+        }catch(Exception tokenExpiredException){
+            throw new TokenInvalidException(
+                    TOKEN_INVALID.getTitle(), TOKEN_INVALID.getMessage(), TOKEN_INVALID.getStatus()
+            );
         }
-        return null;
     }
 
     public boolean isTokenValid(AccessToken accessToken){

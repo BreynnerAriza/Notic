@@ -1,4 +1,4 @@
-package com.notic.auth.authentication.dtos.response;
+package com.notic.auth.dtos.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

@@ -1,11 +1,10 @@
-package com.notic.auth.authentication.controllers;
+package com.notic.auth.controllers;
 
-import com.notic.auth.authentication.dtos.request.AuthenticationCredentialsDTO;
-import com.notic.auth.authentication.dtos.request.UserRegisterDTO;
-import com.notic.auth.authentication.dtos.response.AuthenticationSuccessDTO;
-import com.notic.auth.authentication.dtos.response.UserRegisteredDTO;
-import com.notic.auth.authentication.services.IAuthenticationService;
-import com.notic.common.dtos.responses.ResponseDTO;
+import com.notic.auth.dtos.request.AuthenticationCredentialsDTO;
+import com.notic.auth.dtos.request.RefreshTokenDTO;
+import com.notic.auth.dtos.request.UserRegisterDTO;
+import com.notic.auth.dtos.response.AuthenticationSuccessDTO;
+import com.notic.auth.services.IAuthenticationService;
 import com.notic.common.dtos.responses.SuccessResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,6 +33,17 @@ public class AuthController {
     public ResponseEntity<SuccessResponseDTO<AuthenticationSuccessDTO>> register(
             @RequestBody UserRegisterDTO userRegisterDTO){
         AuthenticationSuccessDTO authentication = authenticationService.register(userRegisterDTO);
+
+        SuccessResponseDTO<AuthenticationSuccessDTO> response
+                = new SuccessResponseDTO<>(HttpStatus.CREATED.value(), authentication);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<SuccessResponseDTO<AuthenticationSuccessDTO>> refreshToken(
+            @RequestBody RefreshTokenDTO refreshToken){
+        AuthenticationSuccessDTO authentication = authenticationService.refreshToken(refreshToken);
 
         SuccessResponseDTO<AuthenticationSuccessDTO> response
                 = new SuccessResponseDTO<>(HttpStatus.CREATED.value(), authentication);

@@ -1,6 +1,6 @@
 package com.notic.user.services;
 
-import com.notic.auth.authentication.dtos.request.UserRegisterDTO;
+import com.notic.auth.dtos.request.UserRegisterDTO;
 import com.notic.common.exceptions.customexceptions.AlreadyExists;
 import com.notic.user.domain.User;
 import com.notic.user.mappers.UserMapper;
@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.notic.auth.authentication.exceptions.constants.AuthenticationExceptionConstants.EMAIL_ALREADY_EXISTS;
+import static com.notic.auth.constants.AuthenticationExceptionConstants.EMAIL_ALREADY_EXISTS;
 
 @Service
 @RequiredArgsConstructor

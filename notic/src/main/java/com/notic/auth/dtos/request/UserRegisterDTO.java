@@ -1,4 +1,4 @@
-package com.notic.auth.authentication.dtos.request;
+package com.notic.auth.dtos.request;
 
 import java.io.Serializable;
 
