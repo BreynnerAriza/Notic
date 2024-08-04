@@ -1,5 +1,6 @@
 package com.notic.common.security.config;
 
+import com.notic.common.security.filters.JwtFilter;
 import com.notic.user.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -17,12 +18,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final JwtFilter jwtFilter;
     private final UserRepository userRepository;
 
     @Bean
@@ -33,6 +36,7 @@ public class SecurityConfig {
                         auth -> {
                             // Authentication end point
                             auth.requestMatchers("/api/v1/auth/**").permitAll();
+                            auth.anyRequest().authenticated();
                         }
                 )
                 .sessionManagement(
@@ -40,6 +44,7 @@ public class SecurityConfig {
                             session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
                         }
                 )
+                .addFilterBefore(jwtFilter, BasicAuthenticationFilter.class)
                 .build();
     }
 

@@ -28,11 +28,9 @@ public class UserServiceImpl implements IUserService {
                     EMAIL_ALREADY_EXISTS.getStatus()
             );
         }
-        System.out.println("userRegisterDTO = " + userRegisterDTO);
         final User user =  userMapper.userRegisterToUser(userRegisterDTO);
         user.setActive(Boolean.TRUE);
         user.setPassword(passwordEncrypted);
-        System.out.println("user = " + user);
 
         return userRepository.save(user);
     }

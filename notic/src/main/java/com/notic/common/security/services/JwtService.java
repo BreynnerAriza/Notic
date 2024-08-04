@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
+import com.notic.accesstoken.domain.AccessToken;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -57,6 +58,10 @@ public class JwtService {
             System.out.println("The token is expired");
         }
         return null;
+    }
+
+    public boolean isTokenValid(AccessToken accessToken){
+        return accessToken != null && !accessToken.getExpired() && !accessToken.getRevoked();
     }
 
 }
