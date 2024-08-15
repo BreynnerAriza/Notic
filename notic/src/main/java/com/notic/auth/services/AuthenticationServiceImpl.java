@@ -12,12 +12,16 @@ import com.notic.auth.dtos.response.LogoutSuccessDTO;
 import com.notic.common.exceptions.customexceptions.TokenInvalidException;
 import com.notic.common.security.services.JwtService;
 import com.notic.user.domain.User;
+import com.notic.user.dtos.response.UserResponseDTO;
+import com.notic.user.mappers.UserMapper;
 import com.notic.user.services.IUserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +38,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService{
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final IAccessTokenService accessTokenService;
+    private final UserMapper userMapper;
 
     @Override
     public AuthenticationSuccessDTO register(UserRegisterDTO userRegisterDTO) {
@@ -89,10 +94,16 @@ public class AuthenticationServiceImpl implements IAuthenticationService{
         accessToken.setExpired(Boolean.TRUE);
         accessToken.setRevoked(Boolean.TRUE);
         accessTokenService.saveToken(accessToken);
-
+        SecurityContextHolder.clearContext();
         return new LogoutSuccessDTO("Logout successful");
     }
 
+    @Override
+    public UserResponseDTO getUserAuthenticate() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User userAuthenticate = userService.findUserByEmail(authentication.getPrincipal().toString());
+        return userMapper.userToUserResponse(userAuthenticate);
+    }
 
     private void saveTokenUser(User user, String token){
         final AccessToken accessToken = AccessToken.builder()

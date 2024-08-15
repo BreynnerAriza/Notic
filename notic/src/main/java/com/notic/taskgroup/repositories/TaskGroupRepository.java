@@ -26,4 +26,11 @@ public interface TaskGroupRepository extends JpaRepository<TaskGroup, Integer> {
     """)
     Optional<TaskGroup> findTaskGroupByNameAndUserId(@Param("name") String name,@Param("userId") Integer userId);
 
+    @Query("""
+        SELECT tg FROM TaskGroup  tg
+        WHERE
+        tg.user.userId = :userId AND tg.name = :name AND NOT tg.taskGroupId = :taskGroupId
+    """)
+    Optional<TaskGroup> findTaskGroupByNameAndDistinctId(String name, Integer taskGroupId, Integer userId);
+
 }

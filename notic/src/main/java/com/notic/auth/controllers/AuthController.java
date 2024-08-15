@@ -22,7 +22,8 @@ public class AuthController {
 
     @PostMapping("/authenticate")
     public ResponseEntity<SuccessResponseDTO<AuthenticationSuccessDTO>> authenticate(
-            @RequestBody AuthenticationCredentialsDTO credentials){
+            @RequestBody AuthenticationCredentialsDTO credentials
+    ){
         AuthenticationSuccessDTO authentication = authenticationService.authentication(credentials);
 
         SuccessResponseDTO<AuthenticationSuccessDTO> response
@@ -33,7 +34,8 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<SuccessResponseDTO<AuthenticationSuccessDTO>> register(
-            @RequestBody UserRegisterDTO userRegisterDTO){
+            @RequestBody UserRegisterDTO userRegisterDTO
+    ){
         AuthenticationSuccessDTO authentication = authenticationService.register(userRegisterDTO);
 
         SuccessResponseDTO<AuthenticationSuccessDTO> response
@@ -44,7 +46,8 @@ public class AuthController {
 
     @PostMapping("/refresh-token")
     public ResponseEntity<SuccessResponseDTO<AuthenticationSuccessDTO>> refreshToken(
-            @RequestBody RefreshTokenDTO refreshToken){
+            @RequestBody RefreshTokenDTO refreshToken
+    ){
         AuthenticationSuccessDTO authentication = authenticationService.refreshToken(refreshToken);
 
         SuccessResponseDTO<AuthenticationSuccessDTO> response
@@ -56,8 +59,10 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<SuccessResponseDTO<LogoutSuccessDTO>> logout(HttpServletRequest request){
         LogoutSuccessDTO logoutSuccess = authenticationService.logout(request);
+
         SuccessResponseDTO<LogoutSuccessDTO> response =
                 new SuccessResponseDTO<>(HttpStatus.OK.value(), logoutSuccess);
+
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

@@ -11,15 +11,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class NoticApplication implements CommandLineRunner {
 
-	@Autowired
-	private JwtService jwtService;
+
 	public static void main(String[] args) {
 		SpringApplication.run(NoticApplication.class, args);
 	}
 
 	@Override
 	public void run(String... args) throws Exception {
-
 
 	}
 

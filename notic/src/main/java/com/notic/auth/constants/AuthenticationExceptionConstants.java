@@ -18,4 +18,5 @@ public enum AuthenticationExceptionConstants {
         this.message = message;
         this.status = status;
     }
+
 }

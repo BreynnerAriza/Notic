@@ -1,7 +1,7 @@
 package com.notic.user.services;
 
 import com.notic.auth.dtos.request.UserRegisterDTO;
-import com.notic.common.exceptions.customexceptions.AlreadyExists;
+import com.notic.common.exceptions.customexceptions.AlreadyExistsException;
 import com.notic.user.domain.User;
 import com.notic.user.mappers.UserMapper;
 import com.notic.user.repositories.UserRepository;
@@ -22,7 +22,7 @@ public class UserServiceImpl implements IUserService {
     @Transactional
     public User saveUser(UserRegisterDTO userRegisterDTO, String passwordEncrypted) {
         if(findUserByEmail(userRegisterDTO.email()) != null){
-            throw new AlreadyExists(
+            throw new AlreadyExistsException(
                     EMAIL_ALREADY_EXISTS.getTitle(),
                     EMAIL_ALREADY_EXISTS.getMessage(),
                     EMAIL_ALREADY_EXISTS.getStatus()

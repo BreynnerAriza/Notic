@@ -35,7 +35,7 @@ public class Task {
     @Column(name = "expiration_hour")
     private LocalTime expirationHour;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_group_id")
     private TaskGroup taskGroup;
 
