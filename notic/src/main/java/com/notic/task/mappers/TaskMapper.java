@@ -10,7 +10,7 @@ import org.mapstruct.MappingConstants;
 
 import java.util.List;
 
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = {TaskGroupMapper.class})
+@Mapper(componentModel = "spring", uses = {TaskGroupMapper.class})
 public interface TaskMapper {
 
     Task taskCreateToTask(TaskCreateDTO taskCreateDTO);

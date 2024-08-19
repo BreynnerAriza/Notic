@@ -8,7 +8,6 @@ import com.notic.task.dtos.request.TaskUpdateDTO;
 import com.notic.task.dtos.response.TaskResponseDTO;
 import com.notic.task.mappers.TaskMapper;
 import com.notic.task.repositories.TaskRepository;
-import com.notic.taskgroup.domain.TaskGroup;
 import com.notic.taskgroup.dtos.response.TaskGroupResponseDTO;
 import com.notic.taskgroup.mappers.TaskGroupMapper;
 import com.notic.taskgroup.services.ITaskGroupService;
@@ -72,12 +71,13 @@ public class TaskServiceImpl implements ITaskService{
     @Override
     @Transactional
     public TaskResponseDTO update(Integer idTask, TaskUpdateDTO taskUpdateDTO) {
-        Task taskOld = findTaskById(idTask);
-        Integer taskGroupId = taskUpdateDTO.taskGroupId() != null ? taskUpdateDTO.taskGroupId() : taskOld.getTaskGroup().getTaskGroupId();
-        TaskGroupResponseDTO taskGroup = taskGroupService.getById(taskGroupId);
-
+        Task task = findTaskById(idTask);
+        if(taskUpdateDTO.taskGroupId() != null){
+            TaskGroupResponseDTO taskGroup = taskGroupService.getById(taskUpdateDTO.taskGroupId());
+            task.setTaskGroup(taskGroupMapper.taskGroupResponseToTaskGroup(taskGroup));
+        }
         if(taskRepository.findByTitleAndGroupDistinctId(
-                taskUpdateDTO.title(), taskGroup.taskGroupId(), taskOld.getTaskId()).isPresent()
+                taskUpdateDTO.title(), task.getTaskGroup().getTaskGroupId(), task.getTaskId()).isPresent()
         ){
             throw new AlreadyExistsException(
                     TITLE_TASK_ALREADY_EXITS.getTitle(), TITLE_TASK_ALREADY_EXITS.getMessage(),
@@ -85,17 +85,13 @@ public class TaskServiceImpl implements ITaskService{
             );
         }
 
-        Task taskNew = new Task();
-        taskNew.setTaskId(taskOld.getTaskId());
-        taskNew.setCreationDate(taskOld.getCreationDate());
-        taskNew.setTaskGroup(taskGroupMapper.taskGroupResponseToTaskGroup(taskGroup));
-        if(!taskUpdateDTO.title().isBlank()) taskNew.setTitle(taskUpdateDTO.title());
-        if(!taskUpdateDTO.description().isBlank()) taskNew.setDescription(taskUpdateDTO.description());
-        if(taskUpdateDTO.completed() != null) taskNew.setCompleted(taskUpdateDTO.completed());
-        if(taskUpdateDTO.expirationDate() != null) taskNew.setExpirationDate(taskUpdateDTO.expirationDate());
-        if(taskUpdateDTO.expirationHour() != null) taskNew.setExpirationHour(taskUpdateDTO.expirationHour());
+        if(taskUpdateDTO.title() != null) task.setTitle(taskUpdateDTO.title());
+        if(taskUpdateDTO.description() != null) task.setDescription(taskUpdateDTO.description());
+        if(taskUpdateDTO.completed() != null) task.setCompleted(taskUpdateDTO.completed());
+        if(taskUpdateDTO.expirationDate() != null) task.setExpirationDate(taskUpdateDTO.expirationDate());
+        if(taskUpdateDTO.expirationHour() != null) task.setExpirationHour(taskUpdateDTO.expirationHour());
 
-        return taskMapper.taskToTaskResponse(taskRepository.save(taskNew));
+        return taskMapper.taskToTaskResponse(taskRepository.save(task));
     }
 
     @Override
