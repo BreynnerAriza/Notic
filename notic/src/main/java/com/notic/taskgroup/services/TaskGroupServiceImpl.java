@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.notic.taskgroup.constants.TaskGroupExceptionConstants.*;
-import java.util.Set;
-import java.util.stream.Collectors;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -48,13 +48,17 @@ public class TaskGroupServiceImpl implements ITaskGroupService{
     }
 
     @Override
+    public TaskGroupResponseDTO getById(Integer id) {
+        TaskGroup taskGroup = findTaskGroupById(id);
+        return taskGroupMapper.taskGroupToTaskGroupResponse(taskGroup);
+    }
+
+    @Override
     @Transactional(readOnly = true)
-    public Set<TaskGroupResponseDTO> getAllByUser() {
+    public List<TaskGroupResponseDTO> getAllByUser() {
         UserResponseDTO userAuthenticate = authenticationService.getUserAuthenticate();
-        Set<TaskGroup> taskGroupByUser = taskGroupRepository.findAllByUserId(userAuthenticate.userId());
-        return taskGroupByUser.stream()
-                .map(taskGroupMapper::taskGroupToTaskGroupResponse)
-                .collect(Collectors.toSet());
+        List<TaskGroup> taskGroupByUser = taskGroupRepository.findAllByUserId(userAuthenticate.userId());
+        return taskGroupMapper.taskGroupListToTaskGroupResponseList(taskGroupByUser);
     }
 
     @Override
@@ -87,6 +91,7 @@ public class TaskGroupServiceImpl implements ITaskGroupService{
         return taskGroupMapper.taskGroupToTaskGroupResponse(taskDelete);
     }
 
+
     private TaskGroup findTaskGroupById(Integer id){
         return taskGroupRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(
@@ -96,4 +101,5 @@ public class TaskGroupServiceImpl implements ITaskGroupService{
                 )
         );
     }
+
 }

@@ -7,8 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Integer> {
@@ -18,7 +18,7 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
         WHERE
         t.taskGroup.taskGroupId = :taskGroupId
     """)
-    Set<Task> findAllByGroup(@Param("taskGroupId") Integer taskGroupId);
+    List<Task> findAllByGroup(@Param("taskGroupId") Integer taskGroupId);
 
     @Query("""
         SELECT t FROM Task t
@@ -31,12 +31,19 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
     @Query("""
         UPDATE Task t SET t.completed =
         (CASE
-            WHEN t.completed THEN FALSE
+            WHEN t.completed = TRUE THEN FALSE
             ELSE TRUE
         END)
         WHERE
         t.taskId = :taskId
     """)
-    Optional<Task> changeCompleted(@Param("taskId") Integer taskId);
+    void changeCompleted(@Param("taskId") Integer taskId);
+
+    @Query("""
+        SELECT t FROM Task t
+        WHERE
+        t.taskGroup.taskGroupId = :taskGroupId AND t.title = :title AND NOT t.taskId = :taskId
+    """)
+    Optional<Task> findByTitleAndGroupDistinctId(@Param("title") String title, @Param("taskGroupId") Integer taskGroupId, Integer taskId);
 
 }

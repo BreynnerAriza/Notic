@@ -27,6 +27,7 @@ public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
     private final UserRepository userRepository;
+    private static final String  [] WHITE_LIST_ULR = {"/api/v1/auth/**"};
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -35,15 +36,13 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         auth -> {
                             // Authentication end point
-                            auth.requestMatchers("/api/v1/auth/logout").authenticated();
-                            auth.requestMatchers("/api/v1/auth/**").permitAll();
+                            auth.requestMatchers("/api/v1/auth/logout/").authenticated();
+                            auth.requestMatchers(WHITE_LIST_ULR).permitAll();
                             auth.anyRequest().authenticated();
                         }
                 )
                 .sessionManagement(
-                        session -> {
-                            session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-                        }
+                        session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .addFilterBefore(jwtFilter, BasicAuthenticationFilter.class)
                 .build();

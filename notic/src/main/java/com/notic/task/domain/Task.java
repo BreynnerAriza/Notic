@@ -39,4 +39,11 @@ public class Task {
     @JoinColumn(name = "task_group_id")
     private TaskGroup taskGroup;
 
+    @PrePersist
+    public void prePersist(){
+        this.creationDate = LocalDateTime.now();
+        this.completed = false;
+    }
+
+
 }

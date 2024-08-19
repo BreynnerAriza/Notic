@@ -20,7 +20,7 @@ public class AuthController {
 
     private final IAuthenticationService authenticationService;
 
-    @PostMapping("/authenticate")
+    @PostMapping("/authenticate/")
     public ResponseEntity<SuccessResponseDTO<AuthenticationSuccessDTO>> authenticate(
             @RequestBody AuthenticationCredentialsDTO credentials
     ){
@@ -32,7 +32,7 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PostMapping("/register")
+    @PostMapping("/register/")
     public ResponseEntity<SuccessResponseDTO<AuthenticationSuccessDTO>> register(
             @RequestBody UserRegisterDTO userRegisterDTO
     ){
@@ -44,7 +44,7 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PostMapping("/refresh-token")
+    @PostMapping("/refresh-token/")
     public ResponseEntity<SuccessResponseDTO<AuthenticationSuccessDTO>> refreshToken(
             @RequestBody RefreshTokenDTO refreshToken
     ){
@@ -56,7 +56,7 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PostMapping("/logout")
+    @PostMapping("/logout/")
     public ResponseEntity<SuccessResponseDTO<LogoutSuccessDTO>> logout(HttpServletRequest request){
         LogoutSuccessDTO logoutSuccess = authenticationService.logout(request);
 
