@@ -2,7 +2,6 @@ package com.notic.common.dtos.responses;
 
 import lombok.Getter;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 
 @Getter

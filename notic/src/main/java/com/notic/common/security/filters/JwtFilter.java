@@ -1,9 +1,8 @@
 package com.notic.common.security.filters;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.notic.accesstoken.domain.AccessToken;
-import com.notic.accesstoken.services.IAccessTokenService;
-import com.notic.common.exceptions.customexceptions.TokenInvalidException;
+import com.notic.accesstoken.persistence.entities.AccessToken;
+import com.notic.accesstoken.business.services.IAccessTokenService;
 import com.notic.common.security.services.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

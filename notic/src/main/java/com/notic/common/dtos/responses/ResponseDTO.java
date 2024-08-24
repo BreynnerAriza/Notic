@@ -1,6 +1,5 @@
 package com.notic.common.dtos.responses;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.io.Serializable;
