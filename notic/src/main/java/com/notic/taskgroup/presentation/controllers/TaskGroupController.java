@@ -6,6 +6,10 @@ import com.notic.taskgroup.facade.dtos.request.TaskGroupUpdateDTO;
 import com.notic.taskgroup.facade.dtos.response.TaskGroupResponseDTO;
 import com.notic.taskgroup.facade.handlers.ITaskGroupHandler;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,10 +36,12 @@ public class TaskGroupController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<SuccessResponseDTO<List<TaskGroupResponseDTO>>> getAllByUser(){
-        List<TaskGroupResponseDTO> taskGroups = taskGroupHandler.getAllByUser();
+    public ResponseEntity<SuccessResponseDTO<Page<TaskGroupResponseDTO>>> getAllByUser(
+           @PageableDefault(page = 0, size = 20, sort = "name", direction = Sort.Direction.DESC) Pageable pageable
+    ){
+        Page<TaskGroupResponseDTO> taskGroups = taskGroupHandler.getAllByUser(pageable);
 
-        SuccessResponseDTO<List<TaskGroupResponseDTO>> response = new SuccessResponseDTO<>(
+        SuccessResponseDTO<Page<TaskGroupResponseDTO>> response = new SuccessResponseDTO<>(
                 HttpStatus.OK.value(), taskGroups
         );
 

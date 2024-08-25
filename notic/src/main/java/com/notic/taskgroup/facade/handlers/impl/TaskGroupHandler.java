@@ -10,6 +10,9 @@ import com.notic.taskgroup.facade.mappers.TaskGroupMapper;
 import com.notic.taskgroup.persistence.entities.TaskGroup;
 import com.notic.user.persistence.entities.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,9 +39,13 @@ public class TaskGroupHandler implements ITaskGroupHandler {
     }
 
     @Override
-    public List<TaskGroupResponseDTO> getAllByUser() {
+    public Page<TaskGroupResponseDTO> getAllByUser(Pageable pageable) {
         User userAuthenticate = authenticationHandler.getUserAuthenticate();
-        return taskGroupMapper.taskGroupListToTaskGroupResponseList(taskGroupService.getAllByUser(userAuthenticate.getUserId()));
+        Page<TaskGroup> taskGroupsPage = taskGroupService.getAllByUser(userAuthenticate.getUserId(), pageable);
+        List<TaskGroup> taskGroupList = taskGroupsPage.getContent();
+        List<TaskGroupResponseDTO> taskGroupResponseDTOList = taskGroupMapper.taskGroupListToTaskGroupResponseList(taskGroupList);
+
+        return new PageImpl<>(taskGroupResponseDTOList, pageable, taskGroupsPage.getTotalElements());
     }
 
     @Override
