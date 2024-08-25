@@ -37,7 +37,7 @@ public class TaskGroupController {
 
     @GetMapping("/")
     public ResponseEntity<SuccessResponseDTO<Page<TaskGroupResponseDTO>>> getAllByUser(
-           @PageableDefault(page = 0, size = 20, sort = "name", direction = Sort.Direction.DESC) Pageable pageable
+           @PageableDefault(page = 0, size = 20, sort = "name", direction = Sort.Direction.ASC) Pageable pageable
     ){
         Page<TaskGroupResponseDTO> taskGroups = taskGroupHandler.getAllByUser(pageable);
 

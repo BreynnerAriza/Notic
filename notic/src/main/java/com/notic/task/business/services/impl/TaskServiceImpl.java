@@ -6,12 +6,12 @@ import com.notic.task.business.services.ITaskService;
 import com.notic.task.persistence.entities.Task;
 import com.notic.task.persistence.repositories.TaskRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.notic.task.utils.constants.TaskExceptionConstants.*;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -27,8 +27,8 @@ public class TaskServiceImpl implements ITaskService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Task> getAllByGroup(Integer idGroup) {
-        return taskRepository.findAllByGroup(idGroup);
+    public Page<Task> getAllByGroup(Integer idGroup, Integer idUser, Pageable pageable) {
+        return taskRepository.findAllByGroup(idGroup, idUser, pageable);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.notic.task.facade.handlers.impl;
 
+import com.notic.auth.facade.handlers.IAuthenticationHandler;
 import com.notic.task.business.services.ITaskService;
 import com.notic.task.facade.dtos.request.TaskCreateDTO;
 import com.notic.task.facade.dtos.request.TaskUpdateDTO;
@@ -9,7 +10,11 @@ import com.notic.task.facade.mappers.TaskMapper;
 import com.notic.task.persistence.entities.Task;
 import com.notic.taskgroup.business.services.ITaskGroupService;
 import com.notic.taskgroup.persistence.entities.TaskGroup;
+import com.notic.user.persistence.entities.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +25,7 @@ public class TaskHandlerImpl implements ITaskHandler {
 
     private final ITaskGroupService taskGroupService;
     private final ITaskService taskService;
+    private final IAuthenticationHandler authenticationHandler;
     private final TaskMapper taskMapper;
 
     @Override
@@ -28,9 +34,14 @@ public class TaskHandlerImpl implements ITaskHandler {
     }
 
     @Override
-    public List<TaskResponseDTO> getAllByGroup(Integer idGroup) {
+    public Page<TaskResponseDTO> getAllByGroup(Integer idGroup, Pageable pageable) {
         taskGroupService.getById(idGroup); //Validate exists
-        return taskMapper.taskListToTaskResponseList(taskService.getAllByGroup(idGroup));
+        User user = authenticationHandler.getUserAuthenticate();
+        Page<Task> taskPage = taskService.getAllByGroup(idGroup, user.getUserId(), pageable);
+        List<Task> tasks = taskPage.getContent();
+        List<TaskResponseDTO> tasksResponse = taskMapper.taskListToTaskResponseList(tasks);
+
+        return new PageImpl<>(tasksResponse, pageable, taskPage.getTotalElements());
     }
 
     @Override
