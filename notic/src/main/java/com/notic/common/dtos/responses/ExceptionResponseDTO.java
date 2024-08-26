@@ -7,11 +7,11 @@ import java.util.Map;
 @Getter
 public class ExceptionResponseDTO extends ResponseDTO{
 
-    private final Map<String, String> error;
+    private final ErrorResponseDTO errors;
 
-    public ExceptionResponseDTO(Integer status, Map<String, String> error) {
+    public ExceptionResponseDTO(Integer status, ErrorResponseDTO errors) {
         super(Boolean.FALSE, status);
-        this.error = error;
+        this.errors = errors;
     }
 
 }

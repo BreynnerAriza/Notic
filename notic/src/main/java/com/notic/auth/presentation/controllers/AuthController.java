@@ -8,21 +8,24 @@ import com.notic.auth.facade.dtos.response.LogoutSuccessDTO;
 import com.notic.auth.facade.handlers.IAuthenticationHandler;
 import com.notic.common.dtos.responses.SuccessResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
+@Validated
 public class AuthController {
 
     private final IAuthenticationHandler authenticationHandler;
 
     @PostMapping("/authenticate/")
     public ResponseEntity<SuccessResponseDTO<AuthenticationSuccessDTO>> authenticate(
-            @RequestBody AuthenticationCredentialsDTO credentials
+            @Valid @RequestBody AuthenticationCredentialsDTO credentials
     ){
         AuthenticationSuccessDTO authentication = authenticationHandler.authentication(credentials);
 
@@ -34,7 +37,7 @@ public class AuthController {
 
     @PostMapping("/register/")
     public ResponseEntity<SuccessResponseDTO<AuthenticationSuccessDTO>> register(
-            @RequestBody UserRegisterDTO userRegisterDTO
+            @Valid @RequestBody UserRegisterDTO userRegisterDTO
     ){
         AuthenticationSuccessDTO authentication = authenticationHandler.register(userRegisterDTO);
 
@@ -46,7 +49,7 @@ public class AuthController {
 
     @PostMapping("/refresh-token/")
     public ResponseEntity<SuccessResponseDTO<AuthenticationSuccessDTO>> refreshToken(
-            @RequestBody RefreshTokenDTO refreshToken
+           @Valid @RequestBody RefreshTokenDTO refreshToken
     ){
         AuthenticationSuccessDTO authentication = authenticationHandler.refreshToken(refreshToken);
 

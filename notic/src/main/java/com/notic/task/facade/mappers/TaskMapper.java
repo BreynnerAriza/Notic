@@ -5,15 +5,34 @@ import com.notic.task.facade.dtos.request.TaskCreateDTO;
 import com.notic.task.facade.dtos.request.TaskUpdateDTO;
 import com.notic.task.facade.dtos.response.TaskResponseDTO;
 import com.notic.taskgroup.facade.mappers.TaskGroupMapper;
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingConstants;
+import org.mapstruct.*;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = {TaskGroupMapper.class})
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = {TaskGroupMapper.class})
 public interface TaskMapper {
 
+     String EXPIRATION_HOUR_FORMAT = "HH:mm";
+     String EXPIRATION_DATE_FORMAT = "dd-MM-yyyy";
+
+    @Mappings({
+            @Mapping(target = "expirationDate", source = "expirationDate", dateFormat = EXPIRATION_DATE_FORMAT),
+            @Mapping(target = "expirationHour", source = "expirationHour", qualifiedByName = "stringToLocalTime")
+    })
     Task taskCreateToTask(TaskCreateDTO taskCreateDTO);
+
+
+    TaskResponseDTO taskToTaskResponse(Task task);
+
+    List<TaskResponseDTO> taskListToTaskResponseList(List<Task> tasks);
+
+    @Named("stringToLocalTime")
+    default LocalTime stringToLocalTime(String time) {
+        return LocalTime.parse(time, DateTimeFormatter.ofPattern(EXPIRATION_HOUR_FORMAT));
+    }
+
     default Task taskUpdateToTaskNew(Task taskOld, TaskUpdateDTO taskUpdateDTO){
         if(taskUpdateDTO.title() != null) taskOld.setTitle(taskUpdateDTO.title());
         if(taskUpdateDTO.description() != null) taskOld.setDescription(taskUpdateDTO.description());
@@ -22,9 +41,5 @@ public interface TaskMapper {
         if(taskUpdateDTO.expirationHour() != null) taskOld.setExpirationHour(taskUpdateDTO.expirationHour());
         return taskOld;
     }
-    TaskResponseDTO taskToTaskResponse(Task task);
-
-    List<TaskResponseDTO> taskListToTaskResponseList(List<Task> tasks);
-
 
 }

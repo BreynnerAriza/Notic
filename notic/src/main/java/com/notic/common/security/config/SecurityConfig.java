@@ -2,6 +2,7 @@ package com.notic.common.security.config;
 
 import com.notic.common.security.filters.JwtFilter;
 import com.notic.user.persistence.repositories.UserRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +18,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration
@@ -27,7 +30,7 @@ public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
     private final UserRepository userRepository;
-    private static final String  [] WHITE_LIST_ULR = {"/api/v1/auth/**"};
+    private static final String[] WHITE_LIST_ULR = {"/api/v1/auth/**"};
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -54,7 +57,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationProvider getAuthenticationProvider(){
+    public AuthenticationProvider getAuthenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setUserDetailsService(getUserDetailsService());
         daoAuthenticationProvider.setPasswordEncoder(getPasswordEncoder());
@@ -62,13 +65,13 @@ public class SecurityConfig {
     }
 
     @Bean
-    public UserDetailsService getUserDetailsService(){
+    public UserDetailsService getUserDetailsService() {
         return email -> userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Credentials invalid"));
     }
 
     @Bean
-    public PasswordEncoder getPasswordEncoder(){
+    public PasswordEncoder getPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 

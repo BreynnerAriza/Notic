@@ -5,6 +5,7 @@ import com.notic.task.facade.dtos.request.TaskCreateDTO;
 import com.notic.task.facade.dtos.request.TaskUpdateDTO;
 import com.notic.task.facade.dtos.response.TaskResponseDTO;
 import com.notic.task.facade.handlers.ITaskHandler;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.query.Order;
 import org.springframework.core.Ordered;
@@ -14,11 +15,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
+@Validated
 public class TaskController {
 
     private final ITaskHandler taskHandler;
@@ -47,7 +50,7 @@ public class TaskController {
     @PostMapping("/tasks-groups/{task-group-id}/tasks/")
     public ResponseEntity<SuccessResponseDTO<TaskResponseDTO>> update(
             @PathVariable(name = "task-group-id") Integer idGroup,
-            @RequestBody TaskCreateDTO taskCreateDTO
+            @Valid @RequestBody TaskCreateDTO taskCreateDTO
     ){
         TaskResponseDTO taskResponse = taskHandler.create(idGroup, taskCreateDTO);
         SuccessResponseDTO<TaskResponseDTO> response = new SuccessResponseDTO<>(
@@ -68,8 +71,8 @@ public class TaskController {
     @PutMapping("/tasks/{task-id}")
     public ResponseEntity<SuccessResponseDTO<TaskResponseDTO>> update(
             @PathVariable(name = "task-id") Integer idTask,
-            @RequestBody TaskUpdateDTO taskUpdateDTO
-            ){
+            @Valid @RequestBody TaskUpdateDTO taskUpdateDTO
+    ){
         TaskResponseDTO taskResponse = taskHandler.update(idTask, taskUpdateDTO);
         SuccessResponseDTO<TaskResponseDTO> response = new SuccessResponseDTO<>(
                 HttpStatus.OK.value(), taskResponse

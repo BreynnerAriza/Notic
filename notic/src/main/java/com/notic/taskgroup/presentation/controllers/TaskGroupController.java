@@ -5,6 +5,7 @@ import com.notic.taskgroup.facade.dtos.request.TaskGroupCreateDTO;
 import com.notic.taskgroup.facade.dtos.request.TaskGroupUpdateDTO;
 import com.notic.taskgroup.facade.dtos.response.TaskGroupResponseDTO;
 import com.notic.taskgroup.facade.handlers.ITaskGroupHandler;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/tasks-groups")
 @RequiredArgsConstructor
+@Validated
 public class TaskGroupController {
 
     private final ITaskGroupHandler taskGroupHandler;
@@ -50,7 +53,7 @@ public class TaskGroupController {
 
     @PostMapping("/")
     public ResponseEntity<SuccessResponseDTO<TaskGroupResponseDTO>> create(
-            @RequestBody TaskGroupCreateDTO taskGroupCreateDTO
+            @Valid @RequestBody TaskGroupCreateDTO taskGroupCreateDTO
     ){
         TaskGroupResponseDTO taskGroupResponseDTO = taskGroupHandler.create(taskGroupCreateDTO);
 
@@ -64,7 +67,7 @@ public class TaskGroupController {
     @PatchMapping("/{task-group-id}")
     public ResponseEntity<SuccessResponseDTO<TaskGroupResponseDTO>> patchTaskGroup(
             @PathVariable(name = "task-group-id") Integer idTaskGroup,
-            @RequestBody TaskGroupUpdateDTO taskGroupUpdateDTO
+            @Valid @RequestBody TaskGroupUpdateDTO taskGroupUpdateDTO
     ){
         TaskGroupResponseDTO taskGroupResponseDTO = taskGroupHandler.update(idTaskGroup, taskGroupUpdateDTO);
 
