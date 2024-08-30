@@ -7,6 +7,7 @@ import com.notic.task.facade.dtos.response.TaskResponseDTO;
 import com.notic.taskgroup.facade.mappers.TaskGroupMapper;
 import org.mapstruct.*;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -16,6 +17,8 @@ public interface TaskMapper {
 
      String EXPIRATION_HOUR_FORMAT = "HH:mm";
      String EXPIRATION_DATE_FORMAT = "dd-MM-yyyy";
+    DateTimeFormatter dateTimeFormatter_dd_MM_yyyy_1156787200 = DateTimeFormatter.ofPattern( EXPIRATION_DATE_FORMAT );
+
 
     @Mappings({
             @Mapping(target = "expirationDate", source = "expirationDate", dateFormat = EXPIRATION_DATE_FORMAT),
@@ -37,8 +40,8 @@ public interface TaskMapper {
         if(taskUpdateDTO.title() != null) taskOld.setTitle(taskUpdateDTO.title());
         if(taskUpdateDTO.description() != null) taskOld.setDescription(taskUpdateDTO.description());
         if(taskUpdateDTO.completed() != null) taskOld.setCompleted(taskUpdateDTO.completed());
-        if(taskUpdateDTO.expirationDate() != null) taskOld.setExpirationDate(taskUpdateDTO.expirationDate());
-        if(taskUpdateDTO.expirationHour() != null) taskOld.setExpirationHour(taskUpdateDTO.expirationHour());
+        if(taskUpdateDTO.expirationDate() != null) taskOld.setExpirationDate(LocalDate.parse(taskUpdateDTO.expirationDate(), dateTimeFormatter_dd_MM_yyyy_1156787200));
+        if(taskUpdateDTO.expirationHour() != null) taskOld.setExpirationHour(stringToLocalTime(taskUpdateDTO.expirationHour()));
         return taskOld;
     }
 

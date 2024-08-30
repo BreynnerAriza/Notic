@@ -61,7 +61,9 @@ public class TaskHandlerImpl implements ITaskHandler {
     public TaskResponseDTO update(Integer idTask, TaskUpdateDTO taskUpdateDTO) {
         Task taskOld = taskService.getById(idTask);
         Task taskNew = taskMapper.taskUpdateToTaskNew(taskOld, taskUpdateDTO);
-        taskNew.setTaskGroup(taskGroupService.getById(taskNew.getTaskGroup().getTaskGroupId()));
+        if(taskUpdateDTO.taskGroupId() != null)
+            taskNew.setTaskGroup(taskGroupService.getById(taskUpdateDTO.taskGroupId()));
+
         return taskMapper.taskToTaskResponse(taskService.update(taskNew));
     }
 
