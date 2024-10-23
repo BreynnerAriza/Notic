@@ -1,8 +1,7 @@
-package com.notic.common.security.config;
+package com.notic.security.config;
 
-import com.notic.common.security.filters.JwtFilter;
+import com.notic.security.filters.JwtFilter;
 import com.notic.user.persistence.repositories.UserRepository;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,9 +17,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration
@@ -30,7 +27,12 @@ public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
     private final UserRepository userRepository;
-    private static final String[] WHITE_LIST_ULR = {"/api/v1/auth/**"};
+    private static final String[] WHITE_LIST_URL = {
+            "/api/v1/auth/**",
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/swagger-ui.html"
+    };
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -40,7 +42,7 @@ public class SecurityConfig {
                         auth -> {
                             // Authentication end point
                             auth.requestMatchers("/api/v1/auth/logout/").authenticated();
-                            auth.requestMatchers(WHITE_LIST_ULR).permitAll();
+                            auth.requestMatchers(WHITE_LIST_URL).permitAll();
                             auth.anyRequest().authenticated();
                         }
                 )

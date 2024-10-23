@@ -11,7 +11,7 @@ import com.notic.auth.facade.dtos.response.AuthenticationSuccessDTO;
 import com.notic.auth.facade.dtos.response.LogoutSuccessDTO;
 import com.notic.auth.facade.handlers.IAuthenticationHandler;
 import com.notic.common.exceptions.customexceptions.TokenInvalidException;
-import com.notic.common.security.services.JwtService;
+import com.notic.security.services.JwtService;
 import com.notic.user.business.services.IUserService;
 import com.notic.user.facade.mappers.UserMapper;
 import com.notic.user.persistence.entities.User;

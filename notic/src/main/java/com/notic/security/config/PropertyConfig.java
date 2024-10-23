@@ -1,4 +1,4 @@
-package com.notic.common.security.config;
+package com.notic.security.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;

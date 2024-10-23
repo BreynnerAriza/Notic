@@ -1,4 +1,4 @@
-package com.notic.common.security.services;
+package com.notic.security.services;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

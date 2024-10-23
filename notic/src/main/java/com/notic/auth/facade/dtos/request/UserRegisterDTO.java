@@ -1,25 +1,30 @@
 package com.notic.auth.facade.dtos.request;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import java.io.Serializable;
 
+@Schema(title = "User register", description = "Data required for user registration")
 public record UserRegisterDTO (
-
 
     @NotBlank(message = EMAIL_REQUIRED)
     @Email(message = EMAIL_FORMAT_INVALID)
     @Size(max = EMAIL_MAX_LENGTH, message = EMAIL_MAX_LENGTH_INVALID)
+    @Schema(example = "Example@gmail.com")
     String email,
     @NotBlank(message = PASSWORD_REQUIRED)
+    @Schema(example = "123456")
     String password,
     @NotBlank(message = NAMES_REQUIRED)
     @Size(max = NAMES_MAX_LENGTH, message = NAME_MAX_LENGTH_INVALID)
+    @Schema(example = "Name invented")
     String names,
     @NotBlank(message = SURNAMES_REQUIRED)
     @Size(max = SURNAMES_MAX_LENGTH, message = SURNAMES_MAX_LENGTH_INVALID)
+    @Schema(example = "Surname invented")
     String surnames
 
 ) implements Serializable {

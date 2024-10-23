@@ -20,10 +20,9 @@ public interface TaskMapper {
     DateTimeFormatter dateTimeFormatter_dd_MM_yyyy_1156787200 = DateTimeFormatter.ofPattern( EXPIRATION_DATE_FORMAT );
 
 
-    @Mappings({
-            @Mapping(target = "expirationDate", source = "expirationDate", dateFormat = EXPIRATION_DATE_FORMAT),
-            @Mapping(target = "expirationHour", source = "expirationHour", qualifiedByName = "stringToLocalTime")
-    })
+
+    @Mapping(target = "expirationDate", source = "expirationDate", dateFormat = EXPIRATION_DATE_FORMAT)
+    @Mapping(target = "expirationHour", source = "expirationHour", qualifiedByName = "stringToLocalTime")
     Task taskCreateToTask(TaskCreateDTO taskCreateDTO);
 
 
